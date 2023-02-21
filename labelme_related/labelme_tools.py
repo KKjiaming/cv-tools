@@ -1,6 +1,7 @@
 import os
 import json
 import cv2
+
 def statistic_tacking(folder_path):
     '''
         这个函数用来查找folder_path中是被追踪的bbox的下xyxy以及没有被追踪的xyxy
@@ -86,7 +87,6 @@ def find_covered(result_folder_path,  ori_prefix = '/dataset/data/巡检测试�
     # d.asset_path_run('/dataset/data/巡检测试集/水泥测试集/水泥-01.04广西广昆高速',
     #                 '/dataset/result/' + save_path + '/水泥测试集/水泥-01.04广西广昆高速_quchong_trackid')     
 
-
 def find_ocr(result_folder_path,  ori_prefix = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
     '''
         这个函数用来查找 result_folder_path 中是否存在公里桩，返回存在公里桩的原图地址
@@ -133,38 +133,7 @@ def find_ocr(result_folder_path,  ori_prefix = '/dataset/data/巡检测试集/',
     #                 '/dataset/result/' + save_path + '/水泥测试集/水泥-01.04广西广昆高速_quchong_trackid')     
 
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import random
-def draw_distribution_picture(untracked_area,tracked_area,density = False):
-    
-    selected_tacked = [area for area in tracked_area if area <30000 ]
-    selected_untracked = [area for area in untracked_area if area <30000 ]
-    sample_selected_untracked = random.sample(selected_untracked, len(selected_tacked))
-    
-    # plt.hist(selected_tacked,bins = 100,color="#FF0000",edgecolor='b',alpha=.9)
-    # # plt.savefig("tools/selected_tacked.png")
-    # # plt.figure()
-    # plt.hist(sample_selected_untracked,bins = 100,color="#C1F320",edgecolor='b',alpha=.5)
-    # plt.savefig("tools/selected_untracked.png")    
-    
-    
-    print(f'the len of selected_tacked is {len(selected_tacked)}')
-    print(f'the len of selected_untracked is {len(selected_untracked)}')
-    print(f'the len of sample_selected_untracked is {len(sample_selected_untracked)}')
-
-    plt.title("Tracked bbox and untracked bbox area distribution")
-    plt.xlabel('bbox area')
-    plt.ylabel('bbox number ')
-    plt.legend(['tracked','untracked'])
-    plt.savefig("tools/join_picture_amount-dikaer.png")
-    
-    # draw Descartes products
-    # with sns.axes_style("dark"):
-    #     sns.jointplot(x=selected_tacked, y=sample_selected_untracked, kind="hex")
-    
-    return 
-                                  
+                           
 if __name__ == '__main__':
     folder_path = '/dataset/result/asset_detect_v0.6.0/水泥测试集'
     # tracked_area,untracked_area = statistic_tacking(folder_path)

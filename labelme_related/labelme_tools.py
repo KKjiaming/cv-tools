@@ -132,11 +132,50 @@ def find_ocr(result_folder_path,  ori_prefix = '/dataset/data/巡检测试集/',
     # d.asset_path_run('/dataset/data/巡检测试集/水泥测试集/水泥-01.04广西广昆高速',
     #                 '/dataset/result/' + save_path + '/水泥测试集/水泥-01.04广西广昆高速_quchong_trackid')     
 
-
+def save_crop(result_folder_path, crop_folder):
+    '''
+        这个函数用来保存crop下来的图片
+        result_folder_path：包含图片信息, json信息
+        crop_folder：包括的是crop下来的图片
+    '''
+    for dirpath, dirnames,  files in os.walk(result_folder_path):
+        # print(dirpath+'\n'+dirnames+'\n'+files)
+        for file in files:
+            if file.endswith('.json'):
+                print(os.path.join(dirpath,file))
+                file_json= json.load(open(os.path.join(dirpath,file)))
+                if 'shapes' in file_json.keys():
+                    for detect_instance in file_json['shapes']:
+                        
+                        if os.path.exists(os.path.join(dirpath,file.replace('.json','.jpeg'))):
+                            ori_path = os.path.join(dirpath,file.replace('.json','.jpeg'))
+                        elif os.path.exists(os.path.join(dirpath,file.replace('.json','.jpg'))):
+                            ori_path = os.path.join(dirpath,file.replace('.json','.jpg'))
+                            
+                        print(f' The original image path is {ori_path} ')
+                        ori_bgr = cv2.imread(ori_path)
+                    
+                        if crop_folder != None:
+                            [[x1, y1], [x2, y2]] = detect_instance['points']
+                            # breakpoint()
+                            c_x,c_y = (x1+x2)/2 , (y1+y2)/2
+                            h,w = abs(y1-y2), abs(x1-x2)
+                            tlbr = [int(c_x - w/2),int(c_y - h/2),int(c_x + w/2),int(c_y + h/2)]
+                            
+                            crop_bgr = ori_bgr[tlbr[1]:tlbr[3], tlbr[0]:tlbr[2],::1]
+                            
+                            crop_path = os.path.join(crop_folder,file.replace('.json',str(x1)+'.jpeg'))
+                            cv2.imwrite(crop_path,crop_bgr)
+                                    
+    # breakpoint() 
+    return 0
+    
+    
                            
 if __name__ == '__main__':
-    folder_path = '/dataset/result/asset_detect_v0.6.0/水泥测试集'
+    folder_path = r"D:\jiqun\asset_tracking\quchong\occlude\covered_cement"
     # tracked_area,untracked_area = statistic_tacking(folder_path)
-    find_covered(folder_path,crop_folder ='/home/smartmore/workspace/jiamingyue/test_out/遮挡2/')
-    breakpoint()
+    # find_covered(folder_path,crop_folder ='/home/smartmore/workspace/jiamingyue/test_out/遮挡2/')
+    # breakpoint()
+    save_crop(folder_path, crop_folder = r"D:\jiqun\asset_tracking\quchong\occlude\crop3")
     

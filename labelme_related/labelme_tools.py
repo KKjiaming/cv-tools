@@ -1,6 +1,22 @@
 import os
 import json
 import cv2
+import platform
+
+sys = platform.system()
+
+if sys == 'Linux':
+    delimiter = '/'
+elif sys == 'Windows':
+    delimiter = '\\'
+# Mac
+elif sys == 'Darwin':
+    delimiter = '/'
+else:
+    print("Can't Work On your Platform Now!")
+
+
+
 
 def statistic_tacking(folder_path):
     '''
@@ -40,7 +56,7 @@ def statistic_tacking(folder_path):
         
     return tracked_area,untracked_area
 
-def find_covered(result_folder_path,  ori_prefix = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
+def find_covered(result_folder_path,  ori_folder_path = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
     '''
         这个函数用来查找 result_folder_path 中是否存在被遮挡的目标，返回存在遮挡的原图地址
         
@@ -62,7 +78,8 @@ def find_covered(result_folder_path,  ori_prefix = '/dataset/data/巡检测试�
                         if detect_instance['is_covered']:
                             # _quchong_trackid
                             c_result_path = os.path.join(dirpath,file.replace('.json','.jpg'))
-                            c_ori_path = ori_prefix+'/'.join(c_result_path.split('/')[-4:]).replace('_quchong_trackid','')
+                            # breakpoint()
+                            c_ori_path = os.path.join(ori_folder_path, delimiter.join(c_result_path.split(delimiter)[-3:]).replace('_covered',''))
                             # c_ori_path = ori_prefix+'/'.join(c_result_path.split('/')[-4:]).replace('_quchong_trackid','')
                             print(f' The original image path is {c_ori_path} ')
                             if crop_folder != None or ori_folder != None:
@@ -110,7 +127,9 @@ def find_ocr(result_folder_path,  ori_prefix = '/dataset/data/巡检测试集/',
                             # _quchong_trackid
                             c_result_path = os.path.join(dirpath,file.replace('.json','.jpg'))
                             breakpoint()
-                            c_ori_path = ori_prefix+'/'.join(c_result_path.split('/')[:-4]).replace('_quchong_trackid','')
+                            c_ori_path = ori_prefix+\
+                                        delimiter.join(c_result_path.split(delimiter)[-3:])\
+                                        .replace('_quchong_trackid','')
                             print(f' The original image path is {c_ori_path} ')
                             if crop_folder != None or ori_folder != None:
                                 c_ori_bgr = cv2.imread(c_ori_path)
@@ -173,9 +192,11 @@ def save_crop(result_folder_path, crop_folder):
     
                            
 if __name__ == '__main__':
-    folder_path = r"D:\jiqun\asset_tracking\quchong\occlude\covered_cement"
+    # folder_path = r"D:\jiqun\asset_tracking\quchong\occlude\covered_cement"
     # tracked_area,untracked_area = statistic_tacking(folder_path)
     # find_covered(folder_path,crop_folder ='/home/smartmore/workspace/jiamingyue/test_out/遮挡2/')
-    # breakpoint()
-    save_crop(folder_path, crop_folder = r"D:\jiqun\asset_tracking\quchong\occlude\crop3")
+    result_folder_path = r"D:\jiqun\asset_tracking\ALL_road_test\cement_json_cover"
+    ori_folder_path = r"D:\jiqun\asset_tracking\ALL_road_test\cement"
+    find_covered(result_folder_path,  ori_folder_path,crop_folder = r"D:\jiqun\asset_tracking\quchong\occlude\crop3", ori_folder = None)
+    #save_crop(folder_path, crop_folder = r"D:\jiqun\asset_tracking\quchong\occlude\crop3")
     

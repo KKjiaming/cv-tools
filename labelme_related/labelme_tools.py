@@ -14,6 +14,9 @@ elif sys == 'Darwin':
     delimiter = '/'
 else:
     print("Can't Work On your Platform Now!")
+    pass
+
+print(f"Runing in {sys} system !!!")
 
 
 

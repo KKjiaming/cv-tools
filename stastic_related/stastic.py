@@ -7,12 +7,16 @@ class Static():
     def __init__(self) -> None:
         super().__init__()
     
-    def draw_distribution_picture(self, untracked_area,tracked_area, density = False,save_folder= "output"):
+    def draw_distribution_picture(self, untracked_area,tracked_area, area_limited = None, density = False,save_folder= "output"):
         if not os.path.exists(save_folder):
             os.makedirs(save_folder)
-            
-        selected_tacked = [area for area in tracked_area if area <30000 ]
-        selected_untracked = [area for area in untracked_area if area <30000 ]
+        if area_limited != None:
+                
+            selected_tacked = [area for area in tracked_area if area <area_limited ]
+            selected_untracked = [area for area in untracked_area if area <area_limited ]
+        else:
+            selected_tacked = tracked_area
+            selected_untracked = untracked_area
         # sample_selected_untracked = random.sample(selected_untracked, len(selected_tacked))
         plt.figure()
         plt.hist(selected_tacked,bins = 100,color="#FF0000",edgecolor='b',alpha=.9,density=density)

@@ -5,23 +5,26 @@ import platform
 
 
 class LabelMan():
-    sys = platform.system()
-
-    if sys == 'Linux':
-        delimiter = '/'
-    elif sys == 'Windows':
-        delimiter = '\\'
-    # Mac
-    elif sys == 'Darwin':
-        delimiter = '/'
-    else:
-        print("Can't Work On your Platform Now!")
-        pass
-
-    print(f"Runing in {sys} system !!!")
 
     def __init__(self) -> None:
-        pass
+        self.get_system()
+    
+    def get_system(self ):
+        sys = platform.system()
+
+        if sys == 'Linux':
+            self.delimiter = '/'
+        elif sys == 'Windows':
+            self.delimiter = '\\'
+        # Mac
+        elif sys == 'Darwin':
+            self.delimiter = '/'
+        else:
+            print("Can't Work On your Platform Now!")
+            pass
+
+        print(f"Runing in {sys} system !!!")
+        
     def statistic_tacking(self, folder_path):
         '''
             这个函数用来查找folder_path中是被追踪的bbox的下xyxy以及没有被追踪的xyxy
@@ -83,7 +86,7 @@ class LabelMan():
                                 # _quchong_trackid
                                 c_result_path = os.path.join(dirpath,file.replace('.json','.jpg'))
                                 # breakpoint()
-                                c_ori_path = os.path.join(ori_folder_path, delimiter.join(c_result_path.split(delimiter)[-3:]).replace('_covered',''))
+                                c_ori_path = os.path.join(ori_folder_path, self.delimiter.join(c_result_path.split(self.delimiter)[-3:]).replace('_covered',''))
                                 # c_ori_path = ori_prefix+'/'.join(c_result_path.split('/')[-4:]).replace('_quchong_trackid','')
                                 print(f' The original image path is {c_ori_path} ')
                                 if crop_folder != None or ori_folder != None:
@@ -132,7 +135,7 @@ class LabelMan():
                                 c_result_path = os.path.join(dirpath,file.replace('.json','.jpg'))
                                 breakpoint()
                                 c_ori_path = ori_prefix+\
-                                            delimiter.join(c_result_path.split(delimiter)[-3:])\
+                                            self.delimiter.join(c_result_path.split(self.delimiter)[-3:])\
                                             .replace('_quchong_trackid','')
                                 print(f' The original image path is {c_ori_path} ')
                                 if crop_folder != None or ori_folder != None:

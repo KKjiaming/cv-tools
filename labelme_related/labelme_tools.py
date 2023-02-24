@@ -19,8 +19,6 @@ else:
 print(f"Runing in {sys} system !!!")
 
 
-
-
 def statistic_tacking(folder_path):
     '''
         这个函数用来查找folder_path中是被追踪的bbox的下xyxy以及没有被追踪的xyxy
@@ -104,8 +102,7 @@ def find_covered(result_folder_path,  ori_folder_path = '/dataset/data/巡检测
                                 continue
     # breakpoint() 
     return covered_img_path
-    # d.asset_path_run('/dataset/data/巡检测试集/水泥测试集/水泥-01.04广西广昆高速',
-    #                 '/dataset/result/' + save_path + '/水泥测试集/水泥-01.04广西广昆高速_quchong_trackid')     
+  
 
 def find_ocr(result_folder_path,  ori_prefix = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
     '''

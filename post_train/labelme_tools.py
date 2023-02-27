@@ -5,30 +5,34 @@ import platform
 
 
 class LabelMan():
-    sys = platform.system()
 
-    if sys == 'Linux':
-        delimiter = '/'
-    elif sys == 'Windows':
-        delimiter = '\\'
-    # Mac
-    elif sys == 'Darwin':
-        delimiter = '/'
-    else:
-        print("Can't Work On your Platform Now!")
-        pass
+    def __init__(self,jsfolder_path) -> None:
+        self.get_system()
+        self.jsfolder_path = jsfolder_path
+    
+    def get_system(self ):
+        sys = platform.system()
 
-    print(f"Runing in {sys} system !!!")
+        if sys == 'Linux':
+            self.delimiter = '/'
+        elif sys == 'Windows':
+            self.delimiter = '\\'
+        # Mac
+        elif sys == 'Darwin':
+            self.delimiter = '/'
+        else:
+            print("Can't Work On your Platform Now!")
+            pass
 
-    def __init__(self) -> None:
-        pass
-    def statistic_tacking(self, folder_path):
+        print(f"Runing in {sys} system !!!")
+        
+    def statistic_tacking(self):
         '''
-            这个函数用来查找folder_path中是被追踪的bbox的下xyxy以及没有被追踪的xyxy
+            这个函数用来查找jsfolder_path中是被追踪的bbox的下xyxy以及没有被追踪的xyxy
         '''
         tracked_bbox = []
         untracked_bbox = []
-        for dirpath, dirnames,  files in os.walk(folder_path):
+        for dirpath, dirnames,  files in os.walk(self.jsfolder_path):
             # print(dirpath+'\n'+dirnames+'\n'+files)
             for file in files:
                 if file.endswith('.json'):
@@ -60,7 +64,7 @@ class LabelMan():
             
         return tracked_area,untracked_area
 
-    def find_covered(self, result_folder_path,  ori_folder_path = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
+    def find_covered(self,  ori_folder_path = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
         '''
             这个函数用来查找 result_folder_path 中是否存在被遮挡的目标，返回存在遮挡的原图地址
             
@@ -71,7 +75,7 @@ class LabelMan():
             
         '''
         covered_img_path = []
-        for dirpath, dirnames,  files in os.walk(result_folder_path):
+        for dirpath, dirnames,  files in os.walk(self.jsfolder_path):
         # print(dirpath+'\n'+dirnames+'\n'+files)
             for file in files:
                 if file.endswith('.json'):
@@ -83,7 +87,7 @@ class LabelMan():
                                 # _quchong_trackid
                                 c_result_path = os.path.join(dirpath,file.replace('.json','.jpg'))
                                 # breakpoint()
-                                c_ori_path = os.path.join(ori_folder_path, delimiter.join(c_result_path.split(delimiter)[-3:]).replace('_covered',''))
+                                c_ori_path = os.path.join(ori_folder_path, self.delimiter.join(c_result_path.split(self.delimiter)[-4:]).replace('_covered',''))
                                 # c_ori_path = ori_prefix+'/'.join(c_result_path.split('/')[-4:]).replace('_quchong_trackid','')
                                 print(f' The original image path is {c_ori_path} ')
                                 if crop_folder != None or ori_folder != None:
@@ -108,18 +112,18 @@ class LabelMan():
         # d.asset_path_run('/dataset/data/巡检测试集/水泥测试集/水泥-01.04广西广昆高速',
         #                 '/dataset/result/' + save_path + '/水泥测试集/水泥-01.04广西广昆高速_quchong_trackid')     
 
-    def find_ocr(self, result_folder_path,  ori_prefix = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
+    def find_ocr(self,  ori_prefix = '/dataset/data/巡检测试集/',crop_folder = None, ori_folder = None):
         '''
-            这个函数用来查找 result_folder_path 中是否存在公里桩，返回存在公里桩的原图地址
+            这个函数用来查找 self.jsfolder_path 中是否存在公里桩，返回存在公里桩的原图地址
             
-            result_folder_path： 待查找的文件夹路径
+            self.jsfolder_path 待查找的文件夹路径
             ori_prefix：原图的prefix
             crop_folder：保存crop的文件夹路径
             ori_folder：保存原图的文件夹路径
             
         '''
         covered_img_path = []
-        for dirpath, dirnames,  files in os.walk(result_folder_path):
+        for dirpath, dirnames,  files in os.walk(self.jsfolder_path):
         # print(dirpath+'\n'+dirnames+'\n'+files)
             for file in files:
                 if file.endswith('.json'):
@@ -132,7 +136,7 @@ class LabelMan():
                                 c_result_path = os.path.join(dirpath,file.replace('.json','.jpg'))
                                 breakpoint()
                                 c_ori_path = ori_prefix+\
-                                            delimiter.join(c_result_path.split(delimiter)[-3:])\
+                                            self.delimiter.join(c_result_path.split(self.delimiter)[-3:])\
                                             .replace('_quchong_trackid','')
                                 print(f' The original image path is {c_ori_path} ')
                                 if crop_folder != None or ori_folder != None:
@@ -155,13 +159,13 @@ class LabelMan():
         # d.asset_path_run('/dataset/data/巡检测试集/水泥测试集/水泥-01.04广西广昆高速',
         #                 '/dataset/result/' + save_path + '/水泥测试集/水泥-01.04广西广昆高速_quchong_trackid')     
 
-    def save_crop(self, result_folder_path, crop_folder):
+    def save_crop(self, crop_folder):
         '''
             这个函数用来保存crop下来的图片
             result_folder_path：包含图片信息, json信息
             crop_folder：包括的是crop下来的图片
         '''
-        for dirpath, dirnames,  files in os.walk(result_folder_path):
+        for dirpath, dirnames,  files in os.walk(self.jsfolder_path):
             # print(dirpath+'\n'+dirnames+'\n'+files)
             for file in files:
                 if file.endswith('.json'):
